@@ -23,16 +23,16 @@ int main (int argc, char* argv[])
     // Check read access ... 
     returnval = access (filepath, R_OK);
     if (returnval == 0)
-        printf ("\n %s read permissions is accessible" , filepath);
+        printf ("\n %s read permissions is accessible \n" , filepath);
     else{
-        printf ("\n %s read permissions is not accessible" , filepath);
+        printf ("\n %s read permissions is not accessible \n" , filepath);
     }
     // Check write access ...
     returnval = access (filepath, W_OK);
     if (returnval == 0)
-        printf ("\n %s write permissions is accessible" , filepath);
+        printf ("\n %s write permissions is accessible \n" , filepath);
     else{
-        printf ("\n %s write permissions is not accessible" , filepath);
+        printf ("\n %s write permissions is not accessible \n" , filepath);
     }
 
     return 0;
