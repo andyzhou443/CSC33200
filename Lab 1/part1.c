@@ -11,17 +11,41 @@ NOTE: Name your executable file as displaycontent and execute your program as ./
 #include <fcntl.h> 
 #include <string.h> 
 #include <errno.h>
+#include <unistd.h>
 
 int main (int argc, char* argv[]){
 
     char* filepath = argv[1]; 
-    int returnval;
-    returnval = access(filepath, F_OK);
+    int fd;
+    char buffer[fd];
 
-    returnval = open (filepath,);
+    fd = access(filepath, F_OK); //checks existence of file
+    if (fd == -1){
+        printf("\n access() failed with error [%s]\n",strerror(errno)); 
+        return 1; 
+    }
+    else{
+        printf("\n file can be accessed\n");
+    }
 
-    if (returnval == 0)//condition for file can't be opened
-        printf("%s file cannot be opened\n");
+    fd = open (filepath, S_IRUSR);//checks if the file can be opened and can be read
+    if (fd == -1){
+        printf("\n open() failed with error [%s]\n",strerror(errno)); 
+        return 1; 
+    }
+    else{
+        printf("\n file can be opened\n");
 
+        fd = read (fd,buffer,sizeof(buffer));
+        printf("\n%s", buffer);
+        printf("\n");
+    
+        close(fd);
+    }
+
+    
+    //negative means call failed
+    //positive is pass
+    //
     return 0;
 }

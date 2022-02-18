@@ -9,19 +9,19 @@ new file (say, destination.txt) and then opens it.
 #include <errno.h>
 #include <unistd.h>
 
-int main (int argc, char* argv[]){
-
+int main (int argc, char* argv[]){//takes in number of input and put it in the first array in memory
+    //pointer to array of character
     int fd;
-    char* filepath = argv[1];
-
-    if (argc != 2){
+    char* filepath = argv[1]; //takes file path from input
+    //points to character array that is referenced to the first element of argv array
+    if (argc != 2){ //error if there is mulitple arguments
         printf ("\n usage: \n");
         return 1;
     }
 
-    fd = open(filepath, O_CREAT | 777);
+    fd = open(filepath, O_CREAT | 777);//creates and open file with all the permission
 
-    if(-1 == fd) 
+    if(-1 == fd) //error checking and prints out the error if fails
     { 
         printf("\n open() failed with error [%s]\n",strerror(errno)); 
         return 1; 
