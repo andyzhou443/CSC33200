@@ -11,7 +11,7 @@ new file (say, destination.txt) and then opens it.
 
 int main (int argc, char* argv[]){//takes in number of input and put it in the first array in memory
     //pointer to array of character
-    int fd;
+    int fd; //integer to hold file descriptor
     char* filepath = argv[1]; //takes file path from input
     //points to character array that is referenced to the first element of argv array
     if (argc != 2){ //error if there is mulitple arguments

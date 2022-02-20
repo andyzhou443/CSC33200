@@ -9,13 +9,13 @@ int main (int argc, char* argv[])
 
     // Check file existence 
     returnval = access (filepath, F_OK); //checks if file can be accessed and if it exists
-    if (returnval == 0) 
+    if (returnval == 0) //if file descriptor is 0, there are no issues.
         printf ("\n %s exists\n", filepath); 
     else 
     { 
-        if (errno == ENOENT)
+        if (errno == ENOENT) //if there is issues, checks errno with ENOENT (code for do not exist) and outputs the error
             printf ("%s does not exist\n", filepath); 
-        else if (errno == EACCES) 
+        else if (errno == EACCES) //if there is issues, checks errno with EACCES (code for cannot access) and outputs the error
             printf ("%s is not accessible\n", filepath); 
         return 0;
     } 
@@ -28,8 +28,8 @@ int main (int argc, char* argv[])
         printf ("\n %s read permissions is not accessible \n" , filepath);
     }
     // Check write access with filepath and if it has write permission
-    returnval = access (filepath, W_OK);
-    if (returnval == 0)
+    returnval = access (filepath, W_OK); 
+    if (returnval == 0) //if file descriptor is 0, there are no issues.
         printf ("\n %s write permissions is accessible \n" , filepath);
     else{
         printf ("\n %s write permissions is not accessible \n" , filepath);
