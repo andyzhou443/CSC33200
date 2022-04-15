@@ -48,7 +48,7 @@ int main (void){
     
     while (1){
         char* executeableInfo[64];
-        for(int i = 0; i < 64; i++)
+        for(int i = 0; i < 64; i++)//ensures executeableInfo contains all 0
             executeableInfo[i] = 0;
         int counter = 0, counter2 = 0;
         printf("command: ");
@@ -61,24 +61,25 @@ int main (void){
         if(strchr(input, '|') != NULL){ //checks if string contains |
             command = strtok (input, " ");
             char* executeableInfoTwo[64];
-            for(int i = 0; i < 64; i++)
+
+            for(int i = 0; i < 64; i++)//ensures executeableInfoTwo contains all 0
                 executeableInfoTwo[i] = 0;
-                
-            int pipefd[2];
+
+            int pipefd[2]; //creates pipe
             if (pipe(pipefd) == -1){
                 printf("error pipe was unsuccessful\n");//error print message
                 return 1;
             }
-            char* pieceOne = strtok(input,"|"); //split 
-            char* pieceTwo = strchr(&input,'\0') + 3;
+            char* pieceOne = strtok(input,"|"); //split the execute into two pieces, one before and one after |
+            char* pieceTwo = strchr(&input,'\0') + 3; //
 
-            while (pieceOne != NULL){
+            while (pieceOne != NULL){ //puts the string to pieces based on if there is a space
                 executeableInfo[counter] = pieceOne;
                 pieceOne = strtok (NULL, " ");
                 counter++;
             }
 
-            while (pieceTwo != NULL){
+            while (pieceTwo != NULL){ //puts the string to pieces based on if there is a space
                 executeableInfoTwo[counter2] = pieceTwo;
                 pieceTwo = strtok (NULL, " ");
                 counter2++;
@@ -92,9 +93,9 @@ int main (void){
             if(child == 0){ //shows we are in child
 
                 //dup sending end of pipe to stdoutput using dup
-                dup2(pipefd[1], 1);
+                dup2(pipefd[1], 1); //dupes the pipe with write
 
-                execvp(executeableInfo[0], executeableInfo); 
+                execvp(executeableInfo[0], executeableInfo);  //executes the command
                 error = errno;
                 printf("EXECL Failed: %s\n", strerror(error)); //if date command fails, this error message will execute
 
@@ -109,32 +110,25 @@ int main (void){
                 }
 
                 if(child2 == 0){ //shows we are in child
-                    waitpid(child, NULL, 0); //NOT SURE IF THIS IS LEGALLLLLLLLLLLL
+                    waitpid(child, NULL, 0); //waits for the first child the complete
                     close(1);
-                    dup2(pipefd[0], 1);
+                    dup2(pipefd[0], 1); //dups the first value of pipe with write
                     //using dup to reference file despitor at the recieving end of the pipe to stdinput
 
-                    execvp(executeableInfoTwo[0], executeableInfoTwo); 
+                    execvp(executeableInfoTwo[0], executeableInfoTwo); //executes the command in executeableInfoTwo
                     error = errno;
                     printf("EXECL Failed: %s\n", strerror(error)); //if date command fails, this error message will execute
-
-
-                    //NEED TO MAKE SURE CHILD passes to CHILD2
-                    //USE DUP AND WELL AS PIPEs
-
                 
                 return 0;
                 }
-                if (child > 0 && child2 > 0){
-                    waitpid(child, NULL, 0);
-                    waitpid(child2, NULL, 0);
+                if (child > 0 && child2 > 0){ //checks if we are in the parent
+                    waitpid(child, NULL, 0); //waits for first child
+                    waitpid(child2, NULL, 0); //waits for second child
                 }
             }
-
-            
         }
         else{
-            command = strtok (input, " ");
+            command = strtok (input, " "); //seperates the command by springs for 
             while (command != NULL){
                 executeableInfo[counter] = command;
                 command = strtok (NULL, " ");
@@ -155,7 +149,7 @@ int main (void){
             }
 
             if(child > 0){ //shows are we in parent
-                if(strchr(input,'|')){
+                if(strchr(input,'|')){ // if there is a | wait for the second child the finish
                     waitpid(child2, NULL, 0);
                 }
                 waitpid(child, NULL, 0); //wait for child to terminate
